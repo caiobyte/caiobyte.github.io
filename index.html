@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caio Maia Azevedo | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --apple-gray: #86868b;
+            --apple-dark: #1d1d1f;
+            --apple-blue: #2997ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+            color: #f5f5f7;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Fixed Background Video */
+        .fixed-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .fixed-bg video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.35;
+        }
+
+        .fixed-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.95) 100%);
+        }
+
+        /* Apple-style Glassmorphism Cards */
+        .glass-card {
+            background: rgba(29, 29, 31, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(40, 40, 42, 0.9);
+            transform: translateY(-4px);
+            border-color: rgba(41, 151, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Typography Utilities */
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, #fff 0%, #6b7280 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        .nav-link {
+            color: #a1a1aa;
+            transition: color 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 400;
+            position: relative;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #2997ff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #fff;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #2997ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            padding: 14px 32px;
+            border-radius: 980px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #e5e5e5;
+            transform: scale(1.05);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 980px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: #86868b;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section Spacing */
+        section {
+            padding: 100px 0;
+            scroll-margin-top: 80px;
+        }
+
+        /* Skill Tags */
+        .skill-tag {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 980px;
+            font-size: 0.85rem;
+            color: #d1d1d6;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            background: rgba(41, 151, 255, 0.15);
+            border-color: rgba(41, 151, 255, 0.4);
+            color: #fff;
+        }
+
+        /* Contact Links */
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .contact-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(41, 151, 255, 0.3);
+            transform: translateX(8px);
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            transform: translateY(-100%);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 15px 0;
+            color: #a1a1aa;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .mobile-menu a:hover {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .btn-primary,
+            .btn-glass {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(41, 151, 255, 0.3);
+            color: #fff;
+        }
+
+        /* Copy feedback */
+        .copy-feedback {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(41, 151, 255, 0.9);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 980px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .copy-feedback.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Social Icons */
+        .social-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #9ca3af;
+        }
+
+        .social-icon.linkedin {
+            color: #9ca3af;
+        }
+        .social-icon.linkedin:hover {
+            background: rgba(0, 119, 181, 0.2);
+            color: #0077b5;
+            transform: scale(1.15);
+        }
+
+        .social-icon.github {
+            color: #9ca3af;
+        }
+        .social-icon.github:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: scale(1.15);
+        }
+
+        .social-icon.email {
+            color: #9ca3af;
+        }
+        .social-icon.email:hover {
+            background: rgba(41, 151, 255, 0.2);
+            color: #2997ff;
+            transform: scale(1.15);
+        }
+
+        /* Tech animation for background */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.35; }
+            50% { opacity: 0.45; }
+        }
+
+        .fixed-bg video {
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* External links styling */
+        .external-link {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div class="loading-text">CARREGANDO</div>
+    </div>
+
+    <!-- Copy Feedback -->
+    <div class="copy-feedback" id="copyFeedback">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="copyText">Copiado!</span>
+    </div>
+
+    <!-- Fixed Background Video - Lifestyle Tech Style -->
+    <div class="fixed-bg">
+        <video autoplay muted loop playsinline id="bgVideo" preload="auto">
+            <source src="https://videos.pexels.com/video-files/855018/855018-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <source src="https://videos.pexels.com/video-files/1996239/1996239-uhd_2560_1440_25fps.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-semibold tracking-tight text-white hover:text-blue-400 transition-colors" onclick="scrollToSection(''); return false;">
+                Caio Maia
+            </a>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="#sobre" class="nav-link" onclick="scrollToSection('sobre'); return false;">Sobre</a>
+                <a href="#formacao" class="nav-link" onclick="scrollToSection('formacao'); return false;">Formação</a>
+                <a href="#habilidades" class="nav-link" onclick="scrollToSection('habilidades'); return false;">Habilidades</a>
+                <a href="#contato" class="nav-link" onclick="scrollToSection('contato'); return false;">Contato</a>
+            </div>
+
+            <button class="md:hidden mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#sobre" onclick="scrollToSection('sobre'); return false;">Sobre</a>
+            <a href="#formacao" onclick="scrollToSection('formacao'); return false;">Formação</a>
+            <a href="#habilidades" onclick="scrollToSection('habilidades'); return false;">Habilidades</a>
+            <a href="#contato" onclick="scrollToSection('contato'); return false;">Contato</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section" id="home">
+        <div class="reveal">
+            <h1 class="hero-title text-gradient">
+                Caio Maia Azevedo
+            </h1>
+            <p class="hero-subtitle mb-8">
+                Estudante de Engenharia de Software
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-3 text-sm text-gray-500 mb-10">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-blue-400"></i>
+                    Rio de Janeiro, Barra da Tijuca
+                </span>
+                <span class="text-gray-700">•</span>
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-graduation-cap text-blue-400"></i>
+                    Conclusão 2029
+                </span>
+            </div>
+            
+            <div class="hero-buttons flex flex-wrap justify-center gap-4">
+                <a href="#contato" class="btn-primary" onclick="scrollToSection('contato'); return false;">
+                    Entrar em Contato
+                </a>
+                <a href="https://github.com/caiobyte" target="_blank" rel="noopener noreferrer" class="btn-glass external-link" id="githubBtn">
+                    <i class="fab fa-github"></i>
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/caiomaiaazevedo" target="_blank" rel="noopener noreferrer" class="btn-glass external-link" id="linkedinBtn">
+                    <i class="fab fa-linkedin"></i>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-40 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#sobre" class="text-gray-500 hover:text-white transition-colors" onclick="scrollToSection('sobre'); return false;">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 relative z-10">
+
+        <!-- Objetivos Section -->
+        <section id="sobre">
+            <div class="reveal">
+                <div class="glass-card p-8 md:p-12">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                            <i class="fas fa-bullseye text-blue-400 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-semibold text-white">Objetivos</h2>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Estudante de Engenharia de Software buscando estágio ou posição júnior para atuar com desenvolvimento de software, aplicando lógica computacional, programação e boas práticas de código em ambientes reais de desenvolvimento.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formação Section -->
+        <section id="formacao">
+            <div class="reveal">
+                <h2 class="section-title">Formação Acadêmica</h2>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-12">
+                    <!-- IBMEC -->
+                    <div class="glass-card p-6 md:p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <span class="text-xs font-medium text-blue-400 uppercase tracking-wider">Graduação</span>
+                                <h3 class="text-xl font-semibold text-white mt-1">Engenharia de Software</h3>
+                                <p class="text-gray-400 mt-1">IBMEC - RJ</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-university text-blue-400"></i>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-700/50">
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-clock mr-2"></i>
+                                Previsão de Conclusão: 2029
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Colégio Santo Agostinho -->
+                    <div class="glass-card p-6 md:p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <span class="text-xs font-medium text-green-400 uppercase tracking-wider">Ensino Médio</span>
+                                <h3 class="text-xl font-semibold text-white mt-1">Ensino Médio</h3>
+                                <p class="text-gray-400 mt-1">Colégio Santo Agostinho - NL</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-school text-green-400"></i>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-700/50">
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Conclusão: 2025
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-semibold text-white text-center mb-8">Cursos e Formação Complementar</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="glass-card p-5 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-certificate text-yellow-400"></i>
+                            <h4 class="font-semibold text-white group-hover:text-blue-400 transition-colors">CS50: Introdução à Ciência da Computação</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 ml-8">HarvardX</p>
+                        <span class="text-xs text-gray-600 ml-8 mt-2 block">2026</span>
+                    </div>
+
+                    <div class="glass-card p-5 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fab fa-python text-blue-400"></i>
+                            <h4 class="font-semibold text-white group-hover:text-blue-400 transition-colors">Programação em Python</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 ml-8">Eletiva Acadêmica</p>
+                        <span class="text-xs text-gray-600 ml-8 mt-2 block">2024</span>
+                    </div>
+
+                    <div class="glass-card p-5 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fab fa-js text-yellow-400"></i>
+                            <h4 class="font-semibold text-white group-hover:text-blue-400 transition-colors">Introdução à Programação com JavaScript</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 ml-8">Grasshopper</p>
+                        <span class="text-xs text-gray-600 ml-8 mt-2 block">2023</span>
+                    </div>
+
+                    <div class="glass-card p-5 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-atom text-purple-400"></i>
+                            <h4 class="font-semibold text-white group-hover:text-blue-400 transition-colors">Física Moderna</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 ml-8">Eletiva Acadêmica</p>
+                        <span class="text-xs text-gray-600 ml-8 mt-2 block">2024</span>
+                    </div>
+
+                    <div class="glass-card p-5 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-briefcase text-orange-400"></i>
+                            <h4 class="font-semibold text-white group-hover:text-blue-400 transition-colors">Empreendedorismo & Jogos de Negócios</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 ml-8">Eletiva Acadêmica</p>
+                        <span class="text-xs text-gray-600 ml-8 mt-2 block">2024</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Habilidades Section -->
+        <section id="habilidades">
+            <div class="reveal">
+                <h2 class="section-title">Competências</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Tech Skills -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-code text-blue-400"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white">Habilidades Técnicas</h3>
+                        </div>
+                        <div class="glass-card p-6">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-tag">Python (fundamentos)</span>
+                                <span class="skill-tag">JavaScript (fundamentos)</span>
+                                <span class="skill-tag">C (introdução)</span>
+                                <span class="skill-tag">Algoritmos básicos</span>
+                                <span class="skill-tag">Estruturas de controle</span>
+                                <span class="skill-tag">Estruturas de dados</span>
+                                <span class="skill-tag">Git</span>
+                                <span class="skill-tag">GitHub</span>
+                                <span class="skill-tag">VS Code</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Soft Skills & Others -->
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                                    <i class="fas fa-brain text-purple-400"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-white">Competências Complementares</h3>
+                            </div>
+                            <div class="glass-card p-6">
+                                <ul class="space-y-3">
+                                    <li class="flex items-center gap-3 text-gray-300">
+                                        <i class="fas fa-check-circle text-green-400 text-sm"></i>
+                                        Pensamento analítico
+                                    </li>
+                                    <li class="flex items-center gap-3 text-gray-300">
+                                        <i class="fas fa-check-circle text-green-400 text-sm"></i>
+                                        Resolução de problemas
+                                    </li>
+                                    <li class="flex items-center gap-3 text-gray-300">
+                                        <i class="fas fa-check-circle text-green-400 text-sm"></i>
+                                        Raciocínio lógico
+                                    </li>
+                                    <li class="flex items-center gap-3 text-gray-300">
+                                        <i class="fas fa-check-circle text-green-400 text-sm"></i>
+                                        Noções de negócios e estratégia
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center">
+                                    <i class="fas fa-users text-orange-400"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-white">Soft Skills</h3>
+                            </div>
+                            <div class="glass-card p-6">
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="skill-tag">Comunicação clara</span>
+                                    <span class="skill-tag">Colaboração em equipe</span>
+                                    <span class="skill-tag">Organização</span>
+                                    <span class="skill-tag">Aprendizado contínuo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Idiomas -->
+                <div class="mt-12">
+                    <div class="flex items-center justify-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <i class="fas fa-language text-green-400"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white">Idiomas</h3>
+                    </div>
+                    <div class="flex justify-center gap-4 flex-wrap">
+                        <div class="glass-card px-6 py-4 flex items-center gap-4 min-w-[180px]">
+                            <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <i class="fas fa-flag text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-white">Português</div>
+                                <div class="text-xs text-gray-500">Nativo</div>
+                            </div>
+                        </div>
+                        <div class="glass-card px-6 py-4 flex items-center gap-4 min-w-[180px]">
+                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-flag text-blue-400"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-white">Inglês</div>
+                                <div class="text-xs text-gray-500">B2</div>
+                            </div>
+                        </div>
+                        <div class="glass-card px-6 py-4 flex items-center gap-4 min-w-[180px]">
+                            <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                                <i class="fas fa-flag text-yellow-400"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-white">Espanhol</div>
+                                <div class="text-xs text-gray-500">B1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contato Section -->
+        <section id="contato">
+            <div class="reveal">
+                <div class="glass-card p-8 md:p-12 text-center">
+                    <div class="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-envelope text-blue-400 text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-semibold text-white mb-2">Vamos conversar?</h2>
+                    <p class="text-gray-400 mb-8 max-w-md mx-auto">
+                        Disponível para oportunidades de estágio e posição júnior em desenvolvimento de software.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
+                        <a href="mailto:caio.maia.azevedo@gmail.com" class="contact-link">
+                            <div class="contact-icon bg-blue-500/20 text-blue-400">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs text-gray-500 uppercase tracking-wider">Email</div>
+                                <div class="text-sm font-medium text-white">caio.maia.azevedo@gmail.com</div>
+                            </div>
+                        </a>
+
+                        <a href="tel:+5521998181180" class="contact-link">
+                            <div class="contact-icon bg-green-500/20 text-green-400">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs text-gray-500 uppercase tracking-wider">Telefone</div>
+                                <div class="text-sm font-medium text-white">+55 (21) 99818-1180</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="flex justify-center gap-6 mb-8">
+                        <a href="https://www.linkedin.com/in/caiomaiaazevedo" target="_blank" rel="noopener noreferrer" 
+                           class="social-icon linkedin glass-card text-2xl"
+                           aria-label="LinkedIn"
+                           id="linkedinIcon">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/caiobyte" target="_blank" rel="noopener noreferrer" 
+                           class="social-icon github glass-card text-2xl"
+                           aria-label="GitHub"
+                           id="githubIcon">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:caio.maia.azevedo@gmail.com" 
+                           class="social-icon email glass-card text-2xl"
+                           aria-label="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+
+                    <!-- Copy Info Buttons -->
+                    <div class="flex flex-wrap justify-center gap-3 pt-6 border-t border-gray-700/50">
+                        <button type="button" onclick="copyToClipboard('caio.maia.azevedo@gmail.com', 'Email')" 
+                                class="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+                            <i class="fas fa-copy"></i>
+                            Copiar Email
+                        </button>
+                        <button type="button" onclick="copyToClipboard('+5521998181180', 'Telefone')" 
+                                class="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+                            <i class="fas fa-copy"></i>
+                            Copiar Telefone
+                        </button>
+                        <button type="button" onclick="copyToClipboard('https://www.linkedin.com/in/caiomaiaazevedo', 'LinkedIn')" 
+                                class="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+                            <i class="fas fa-copy"></i>
+                            Copiar LinkedIn
+                        </button>
+                        <button type="button" onclick="copyToClipboard('https://github.com/caiobyte', 'GitHub')" 
+                                class="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+                            <i class="fas fa-copy"></i>
+                            Copiar GitHub
+                        </button>
+                    </div>
+                </div>
+                
+                <footer class="mt-12 text-center text-gray-600 text-sm">
+                    <p>&copy; 2024 Caio Maia Azevedo. Todos os direitos reservados.</p>
+                    <p class="mt-2 text-xs">Rio de Janeiro, Brasil</p>
+                </footer>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            const video = document.getElementById('bgVideo');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            const hideLoading = () => {
+                loadingScreen.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            };
+
+            if (video.readyState >= 3) {
+                setTimeout(hideLoading, 800);
+            } else {
+                video.addEventListener('canplay', () => {
+                    setTimeout(hideLoading, 800);
+                });
+                setTimeout(hideLoading, 5000);
+            }
+        });
+
+        // Scroll to Section Function
+        function scrollToSection(sectionId) {
+            const navbar = document.getElementById('navbar');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            // Close mobile menu if open
+            mobileMenu.classList.remove('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            icon.classList.add('fa-bars');
+            icon.classList.remove('fa-times');
+            
+            if (sectionId === '') {
+                // Scroll to top
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            } else {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    const navHeight = navbar.offsetHeight;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+            
+            return false;
+        }
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const revealPoint = 150;
+
+            revealElements.forEach((element) => {
+                const elementTop = element.getBoundingClientRect().top;
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Active Nav Link Highlighting
+        const sections = document.querySelectorAll('section[id], header[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const navHeight = navbar.offsetHeight;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - navHeight - 100;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Copy to Clipboard Function
+        function copyToClipboard(text, label) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopyFeedback(label);
+                }).catch(err => {
+                    fallbackCopy(text, label);
+                });
+            } else {
+                fallbackCopy(text, label);
+            }
+        }
+
+        function fallbackCopy(text, label) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showCopyFeedback(label);
+            } catch (err) {
+                console.error('Erro ao copiar:', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopyFeedback(label) {
+            const feedback = document.getElementById('copyFeedback');
+            const copyText = document.getElementById('copyText');
+            copyText.textContent = `${label} copiado!`;
+            feedback.classList.add('show');
+            
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 2500);
+        }
+
+        // External Links Handler - Open in new tab
+        function openExternalLink(url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // Add click handlers for external links
+        document.getElementById('githubBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openExternalLink('https://github.com/caiobyte');
+        });
+
+        document.getElementById('linkedinBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openExternalLink('https://www.linkedin.com/in/caiomaiaazevedo');
+        });
+
+        document.getElementById('githubIcon').addEventListener('click', function(e) {
+            e.preventDefault();
+            openExternalLink('https://github.com/caiobyte');
+        });
+
+        document.getElementById('linkedinIcon').addEventListener('click', function(e) {
+            e.preventDefault();
+            openExternalLink('https://www.linkedin.com/in/caiomaiaazevedo');
+        });
+
+        // Video error handling with fallback
+        const bgVideo = document.getElementById('bgVideo');
+        bgVideo.addEventListener('error', () => {
+            console.log('Video failed to load, using fallback background');
+            document.querySelector('.fixed-bg').style.background = 
+                'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 25%, #0f0f1a 50%, #1a1a2e 75%, #0a0a0f 100%)';
+            document.querySelector('.fixed-bg').style.backgroundSize = '400% 400%';
+        });
+    </script>
+</body>
+</html>
+
